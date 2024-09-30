@@ -4,7 +4,72 @@ All notable changes to this project will be documented in this file.
 
 ## [Master]
 
-	- Backported everything up to and including https://github.com/godotengine/godot/commit/c84cf04e95b2b2e3a7bfea52c5f8d4cbaf38bc20 Merge commit: https://github.com/godotengine/godot/commit/1b0526226fee84be9a8e5c65b8e163711ea36a08
+Nothing yet.
+
+## [4.5.0]
+
+Highlights:
+
+- New Procedural Tree 3D Module. Adds a new 'ProceduralTreeMesh' Mesh class that can generate trees procedurally. It uses https://github.com/jarikomppa/proctree .
+- Backported text-to-speech support.
+- Now the releases include a gdnative headers zip.
+
+Breaking changes:
+
+- None.
+
+### Added
+
+#### Engine
+
+- Backport text-to-speech support.
+
+#### Modules
+
+##### Procedural Tree 3D
+
+- New Procedural Tree 3D Module. Adds a new 'ProceduralTreeMesh' Mesh class that can generate trees procedurally. It uses https://github.com/jarikomppa/proctree .
+
+#### Release
+
+- Now the releases include a gdnative headers zip.
+- Reworked the copy_repos script to use git locally to make a copy from the local engine tree.
+- Copy gdnative headers helper script.
+
+### Fixed
+
+- Make sure the thumbnail view is the default in the FileSystemDock as intended.
+- Only keep one of the doc links in the editor's help menu.
+- Updated the engine license in the EditorAbout window.
+- Merge pull request from halotroop2288: Separate statements about Godot and Pandemonium in README
+
+### Removed
+
+- Removed feature profile dir creation from the editor.
+- Removed the support development option from the help menu.
+- Removed the donors tab from the EditorAbout window, as I'm not even trying to take donations anymore.
+
+### Backports
+
+- Backported everything up to and including https://github.com/godotengine/godot/commit/0ccd559d176b5e0d0c72128c382b6cad525438c2 Merge commit: https://github.com/godotengine/godot/commit/8c444fb9c9ed70306630ebaf4868a6629df1296c
+
+#### Godot 3.x
+
+- `Object::call()` prevent debug lock accessing dangling pointer
+  Self deleting an object within a call was leading to crashes due to referencing freed memory, due to a raw pointer stored in the debug lock.
+- Fix parsing of `4.` in Expression
+- Backported: Doctool: Remove version attribute from XML header. We don't use that info for anything, 
+  and it generates unnecessary diffs every time we bump the minor version (and CI failures if we forget 
+  to sync some files from opt-in modules (mono, text_server_fb).
+- Safe `Camera::unproject_position()`
+  `unproject_position()` can fail in some circumstances, and this needs to be conveyed to calling code.
+- PopupMenu: Update margins on visibility change Fixes #96149.
+- Verify GLTF indices to prevent crash with corrupt files
+  Also verify prior to vertex optimization.
+- GLTF: Fixed external images getting embedded on import
+  Added a map to keep track of external images during import, and used
+  that map to instance the textures using the resource loader instead of
+  creating a new texture from scratch
 
 ## [4.4.0]
 
