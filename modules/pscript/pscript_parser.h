@@ -461,6 +461,7 @@ public:
 			CF_FOREACH,
 			CF_FOR,
 			CF_WHILE,
+			CF_DO,
 			CF_BREAK,
 			CF_CONTINUE,
 			CF_RETURN,

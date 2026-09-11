@@ -1837,6 +1837,7 @@ void PScriptLanguage::get_reserved_words(List<String> *p_words) const {
 		"switch",
 		"case",
 		"while",
+		"do",
 		"default",
 		"Ref",
 		nullptr
@@ -1865,7 +1866,8 @@ bool PScriptLanguage::is_control_flow_keyword(String p_keyword) const {
 			p_keyword == "case" ||
 			p_keyword == "default" ||
 			p_keyword == "return" ||
-			p_keyword == "while";
+			p_keyword == "while" ||
+			p_keyword == "do";
 }
 
 bool PScriptLanguage::handles_global_class_type(const String &p_type) const {

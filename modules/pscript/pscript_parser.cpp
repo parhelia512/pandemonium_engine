@@ -3200,6 +3200,69 @@ void PScriptParser::_parse_block(BlockNode *p_block, bool p_static, bool p_consu
 				}
 				p_block->statements.push_back(cf_while);
 			} break;
+			case PScriptTokenizer::TK_CF_DO: {
+				tokenizer->advance();
+
+				ControlFlowNode *cf_do = alloc_node<ControlFlowNode>();
+
+				cf_do->cf_type = ControlFlowNode::CF_DO;
+
+				cf_do->body = alloc_node<BlockNode>();
+				cf_do->body->parent_block = p_block;
+				cf_do->body->can_break = true;
+				cf_do->body->can_continue = true;
+				p_block->sub_blocks.push_back(cf_do->body);
+
+				if (!_enter_block(cf_do->body)) {
+					_set_error("Expected '{' after \"do\".");
+					p_block->end_line = tokenizer->get_token_line();
+					return;
+				}
+
+				current_block = cf_do->body;
+				_parse_block(cf_do->body, p_static);
+				current_block = p_block;
+
+				if (error_set) {
+					return;
+				}
+
+				while (tokenizer->get_token() == PScriptTokenizer::TK_NEWLINE) {
+					tokenizer->advance();
+				}
+
+				if (tokenizer->get_token() != PScriptTokenizer::TK_CF_WHILE) {
+					_set_error("Expected \"while\" after \"do\" block.");
+					p_block->end_line = tokenizer->get_token_line();
+					return;
+				}
+
+				tokenizer->advance();
+
+				while (tokenizer->get_token() == PScriptTokenizer::TK_NEWLINE) {
+					tokenizer->advance();
+				}
+
+				Node *condition2 = _parse_and_reduce_expression(p_block, p_static);
+				if (!condition2) {
+					if (_recover_from_completion()) {
+						break;
+					}
+					return;
+				}
+
+				cf_do->arguments.push_back(condition2);
+				p_block->statements.push_back(cf_do);
+
+				while (tokenizer->get_token() == PScriptTokenizer::TK_NEWLINE) {
+					tokenizer->advance();
+				}
+
+				if (!_end_statement()) {
+					_set_error(vformat("Expected ';' after expression, got %s instead.", tokenizer->get_token_name(tokenizer->get_token())));
+					return;
+				}
+			} break;
 			case PScriptTokenizer::TK_CF_FOR: {
 				tokenizer->advance();
 

@@ -1638,6 +1638,40 @@ Error PScriptCompiler::_parse_block(CodeGen &codegen, const PScriptParser::Block
 						codegen.opcodes.write[break_addr + 1] = codegen.opcodes.size();
 
 					} break;
+					case PScriptParser::ControlFlowNode::CF_DO: {
+						// Jump over break and continue jump opcode
+						codegen.opcodes.push_back(PScriptFunction::OPCODE_JUMP);
+						codegen.opcodes.push_back(codegen.opcodes.size() + 5);
+						int break_addr = codegen.opcodes.size();
+						// Break jump opcode
+						codegen.opcodes.push_back(PScriptFunction::OPCODE_JUMP);
+						codegen.opcodes.push_back(0);
+						// Continue jump opcode
+						int continue_addr = codegen.opcodes.size();
+						codegen.opcodes.push_back(PScriptFunction::OPCODE_JUMP);
+						codegen.opcodes.push_back(0);
+
+						int loop_body_address = codegen.opcodes.size();
+
+						Error err = _parse_block(codegen, cf->body, p_stack_level, break_addr, continue_addr);
+						if (err) {
+							return err;
+						}
+
+						// continue should go to the while check
+						codegen.opcodes.write[continue_addr + 1] = codegen.opcodes.size();
+
+						int ret2 = _parse_expression(codegen, cf->arguments[0], p_stack_level, false);
+						if (ret2 < 0) {
+							return ERR_PARSE_ERROR;
+						}
+						codegen.opcodes.push_back(PScriptFunction::OPCODE_JUMP_IF);
+						codegen.opcodes.push_back(ret2);
+						codegen.opcodes.push_back(loop_body_address);
+
+						codegen.opcodes.write[break_addr + 1] = codegen.opcodes.size();
+
+					} break;
 					case PScriptParser::ControlFlowNode::CF_BLOCK: {
 						Error err = _parse_block(codegen, cf->body, p_stack_level, p_break_addr, p_continue_addr);
 						if (err) {

@@ -2283,7 +2283,7 @@ static void _find_identifiers(const PScriptCompletionContext &p_context, bool p_
 		"yield",
 #endif
 		"const", "enum", "export", "onready", "static", "Variant", "break", "continue", "if",
-		"else", "foreach", "for", "return", "switch", "while", "default", "case", "Ref", nullptr
+		"else", "foreach", "for", "return", "switch", "while", "do", "default", "case", "Ref", nullptr
 	};
 
 	const char **kw = _keywords;
