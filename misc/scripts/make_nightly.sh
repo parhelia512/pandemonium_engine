@@ -174,6 +174,7 @@ python ./misc/scripts_app/copy_repos.py . ./release/temp/pandemonium_v${version_
 ./bin/pandemonium_server.x11.opt.tools.64 --version-full-config > release/temp/templates/version.txt
 ./bin/pandemonium_server.x11.opt.tools.64 --version-full-config > release/temp/templates_server/version.txt
 ./bin/pandemonium_server.x11.opt.tools.64 --version-full-config > release/temp/templates_sbc/version.txt
+./bin/pandemonium_server.x11.opt.tools.64 --version > release/version.txt
 
 # ==== GDNative headers
 
